@@ -1,5 +1,5 @@
+import { UnitParams } from '../../../models';
 import { Unit } from './unit';
-import { UnitParams } from '../models';
 
 export class PlayerCharacter extends Unit {
   constructor(params: UnitParams) {

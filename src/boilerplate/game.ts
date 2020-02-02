@@ -5,9 +5,8 @@
  */
 
 import 'phaser';
-import { BootScene } from './scenes/boot-scene';
-import { WorldScene } from './scenes/world-scene';
 import { BattleScene } from './scenes/battle-scene';
+import { BootScene } from './scenes/boot-scene';
 import { UiScene } from './scenes/ui-scene';
 
 // main game configuration

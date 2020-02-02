@@ -1,13 +1,11 @@
-import { PlayerCharacter } from '../sprites/player-character';
-import { UnitParams } from '../models';
 import { Texture, UnitType } from '../enums';
-import { Enemy } from '../sprites/enemy';
-import { Unit } from '../sprites/unit';
+import { Enemy, PlayerCharacter, Unit } from '../game-objects/sprites/sprites';
+import { UnitParams } from '../models';
 
 export class BattleScene extends Phaser.Scene {
-  private _heroes: PlayerCharacter[];
-  private _enemies: Enemy[];
-  private _units: Unit[];
+  public heroes: PlayerCharacter[];
+  public enemies: Enemy[];
+  public units: Unit[];
 
   constructor() {
     super({ key: 'BattleScene' });
@@ -65,9 +63,9 @@ export class BattleScene extends Phaser.Scene {
       damage: 3
     } as UnitParams);
 
-    this._heroes = [warrior, mage];
-    this._enemies = [dragonBlue, dragonOrange];
-    this._units = [...this._heroes, ...this._enemies];
+    this.heroes = [warrior, mage];
+    this.enemies = [dragonBlue, dragonOrange];
+    this.units = [...this.heroes, ...this.enemies];
 
     // Run UI scene at the same time
     this.scene.launch('UiScene');

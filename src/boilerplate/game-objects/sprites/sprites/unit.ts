@@ -1,7 +1,8 @@
-import { UnitParams } from '../models';
+import { UnitParams } from '../../../models';
 
 export class Unit extends Phaser.GameObjects.Sprite {
-  private _type: any;
+  public type: any;
+
   private _hp: number;
   private _maxHp: number;
   private _damage: number;
@@ -9,11 +10,11 @@ export class Unit extends Phaser.GameObjects.Sprite {
 
   constructor(params: UnitParams) {
     super(params.scene, params.x, params.y, params.texture, params.frame);
-    console.log(params);
-    this._type = params.type;
+    this.type = params.type;
     this._maxHp = this._hp = params.hp;
     this._damage = params.damage; // Default damage
 
+    // TODO: Unsure if this is correct way of adding sprite to scene. Further research needed.
     this._currentScene = params.scene;
     this._currentScene.add.existing(this);
   }
