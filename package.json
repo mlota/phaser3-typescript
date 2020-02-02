@@ -18,10 +18,13 @@
     "Phaser3-example"
   ],
   "devDependencies": {
+    "codelyzer": "^5.2.1",
     "expose-loader": "0.7.5",
     "prettier": "^1.19.1",
     "ts-loader": "6.0.4",
+    "tslint": "^6.0.0",
     "typescript": "3.5.2",
+    "vrsource-tslint-rules": "^6.0.0",
     "webpack": "4.35.2",
     "webpack-cli": "3.3.5",
     "webpack-dev-server": "3.7.2"

@@ -1,6 +1,7 @@
 import { HeroesMenu, Menu } from '../game-objects/menus';
 import { ActionsMenu } from '../game-objects/menus/actions-menu';
 import { EnemiesMenu } from '../game-objects/menus/enemies-menu';
+import { Message } from '../game-objects/utils';
 import { BattleScene } from './battle-scene';
 
 export class UiScene extends Phaser.Scene {
@@ -11,6 +12,7 @@ export class UiScene extends Phaser.Scene {
   private _enemiesMenu: EnemiesMenu;
   private _currentMenu: Menu;
   private _battleScene: BattleScene;
+  private _message: Message;
 
   constructor() {
     super({ key: 'UiScene' });
@@ -46,6 +48,21 @@ export class UiScene extends Phaser.Scene {
 
     this.remapHeroes();
     this.remapEnemies();
+
+    this.input.keyboard.on('keydown', this.onKeyInput, this);
+
+    this._battleScene.events.on('PlayerSelect', this.onPlayerSelect, this);
+
+    this.events.on('SelectEnemies', this.onSelectEnemies, this);
+
+    this.events.on('Enemy', this.onEnemy, this);
+
+    this._message = new Message(this, this._battleScene.events);
+    this.add.existing(this._message);
+
+    this._battleScene.events;
+
+    this._battleScene.nextTurn();
   }
 
   remapHeroes(): void {
@@ -56,5 +73,38 @@ export class UiScene extends Phaser.Scene {
   remapEnemies(): void {
     const enemies = this._battleScene.enemies;
     this._enemiesMenu.remap(enemies);
+  }
+
+  onKeyInput(event: any): void {
+    if (this._currentMenu) {
+      if (event.code === 'ArrowUp') {
+        this._currentMenu.moveSelectionUp();
+      } else if (event.code == 'ArrowDown') {
+        this._currentMenu.moveSelectionDown();
+      } else if (event.code === 'ArrowRight' || event.code === 'Shift') {
+      } else if (event.code === 'Space' || event.code === 'ArrowLeft') {
+        this._currentMenu.confirm();
+      }
+    }
+  }
+
+  onPlayerSelect(id: number): void {
+    this._heroesMenu.select(id);
+    this._actionsMenu.select(0);
+    this._currentMenu = this._actionsMenu;
+  }
+
+  onSelectEnemies(): void {
+    this._currentMenu = this._enemiesMenu;
+    this._enemiesMenu.select(0);
+  }
+
+  onEnemy(index: number): void {
+    console.log(index);
+    this._heroesMenu.deselect();
+    this._actionsMenu.deselect();
+    this._enemiesMenu.deselect();
+    this._currentMenu = null;
+    this._battleScene.receivePlayerSelection('attack', index);
   }
 }

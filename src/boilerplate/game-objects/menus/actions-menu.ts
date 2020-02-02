@@ -8,6 +8,6 @@ export class ActionsMenu extends Menu {
   }
 
   confirm(): void {
-    // Do something when the player selects an action
+    this.scene.events.emit('SelectEnemies');
   }
 }

@@ -6,6 +6,7 @@ export class BattleScene extends Phaser.Scene {
   public heroes: PlayerCharacter[];
   public enemies: Enemy[];
   public units: Unit[];
+  public index: number = 0;
 
   constructor() {
     super({ key: 'BattleScene' });
@@ -69,5 +70,44 @@ export class BattleScene extends Phaser.Scene {
 
     // Run UI scene at the same time
     this.scene.launch('UiScene');
+
+    this.index = -1;
+  }
+
+  nextTurn(): void {
+    this.index++;
+    // If there are no more units, we start again from the
+    // first one
+    if (this.index >= this.units.length) {
+      this.index = 0;
+    }
+    if (this.units[this.index]) {
+      // If its player hero
+      if (this.units[this.index] instanceof PlayerCharacter) {
+        this.events.emit('PlayerSelect', this.index);
+      } else {
+        // Else if its enemy unit
+        const r = Math.floor(Math.random() * this.heroes.length);
+        // Call the enemy's attack function
+        this.units[this.index].attack(this.heroes[r]);
+        // Add timer for the next turn, so will have smooth gameplay
+        this.time.addEvent({
+          delay: 3000,
+          callback: this.nextTurn,
+          callbackScope: this
+        });
+      }
+    }
+  }
+
+  receivePlayerSelection(action: string, target: number) {
+    if (action === 'attack') {
+      this.units[this.index].attack(this.enemies[target]);
+    }
+    this.time.addEvent({
+      delay: 3000,
+      callback: this.nextTurn,
+      callbackScope: this
+    });
   }
 }

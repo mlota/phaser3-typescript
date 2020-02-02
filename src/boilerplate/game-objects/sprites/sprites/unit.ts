@@ -2,28 +2,36 @@ import { UnitParams } from '../../../models';
 
 export class Unit extends Phaser.GameObjects.Sprite {
   public type: any;
-
-  private _hp: number;
-  private _maxHp: number;
-  private _damage: number;
-  private _currentScene: Phaser.Scene;
+  public hp: number;
+  public maxHp: number;
+  public damage: number;
+  public currentScene: Phaser.Scene;
+  public alive: boolean;
 
   constructor(params: UnitParams) {
     super(params.scene, params.x, params.y, params.texture, params.frame);
     this.type = params.type;
-    this._maxHp = this._hp = params.hp;
-    this._damage = params.damage; // Default damage
+    this.maxHp = this.hp = params.hp;
+    this.damage = params.damage; // Default damage
 
     // TODO: Unsure if this is correct way of adding sprite to scene. Further research needed.
-    this._currentScene = params.scene;
-    this._currentScene.add.existing(this);
+    this.currentScene = params.scene;
+    this.currentScene.add.existing(this);
   }
 
   attack(target: Unit): void {
-    target.takeDamage(this._damage);
+    target.takeDamage(this.damage);
+    this.scene.events.emit(
+      'Message',
+      `${this.type} attacks ${target.type} for ${this.damage} damage`
+    );
   }
 
   takeDamage(damage: number) {
-    this._hp -= damage;
+    this.hp -= damage;
+    if (this.hp <= 0) {
+      this.hp = 0;
+      this.alive = false;
+    }
   }
 }

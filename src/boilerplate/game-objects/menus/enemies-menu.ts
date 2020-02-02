@@ -7,6 +7,6 @@ export class EnemiesMenu extends Menu {
   }
 
   confirm(): void {
-    // Do something when the player selects an enemy
+    this.scene.events.emit('Enemy', this.menuItemIndex);
   }
 }
